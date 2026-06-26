@@ -1,0 +1,41 @@
+{
+  "slug": "study-guide",
+  "name": "Study Guide",
+  "author": "StudyShield project",
+  "license": "CC0-1.0",
+  "language": "en",
+  "contentRating": "general",
+  "compatibleVersion": 1,
+  "layout": {
+    "sidePreference": "PackDefault",
+    "packDefaultSide": "Right",
+    "characterAnchorX": 0.78,
+    "characterAnchorY": 0.62,
+    "characterScale": 1.0,
+    "characterOpacity": 1.0,
+    "bubbleAnchorX": 0.22,
+    "bubbleAnchorY": 0.3,
+    "bubbleAlignment": "Start",
+    "animation": "Fade",
+    "backgroundMode": "Solid",
+    "overlayDim": 0.72,
+    "reduceMotion": false
+  },
+  "dialogue": [
+    {
+      "scene": "Triggered",
+      "text": "This is your study window. Take one breath before continuing.",
+      "transcript": "This is your study window. Take one breath before continuing."
+    },
+    {
+      "scene": "FirstSkip",
+      "text": "Skipping once is recorded only for your reflection.",
+      "transcript": "Skipping once is recorded only for your reflection."
+    },
+    {
+      "scene": "SessionEnded",
+      "text": "Focus session ended. Your local record is ready.",
+      "transcript": "Focus session ended. Your local record is ready."
+    }
+  ]
+}

@@ -1,0 +1,46 @@
+{
+  "slug": "codex-cat-girl",
+  "name": "Codex Cat Girl",
+  "author": "StudyShield project",
+  "license": "CC0-1.0",
+  "language": "zh-Hant",
+  "contentRating": "general",
+  "compatibleVersion": 1,
+  "characterImageUri": "assets/character.png",
+  "layout": {
+    "sidePreference": "PackDefault",
+    "packDefaultSide": "Right",
+    "characterAnchorX": 0.72,
+    "characterAnchorY": 0.58,
+    "characterScale": 1.05,
+    "characterOpacity": 1.0,
+    "bubbleAnchorX": 0.22,
+    "bubbleAnchorY": 0.28,
+    "bubbleAlignment": "Start",
+    "animation": "Fade",
+    "backgroundMode": "Solid",
+    "overlayDim": 0.72,
+    "wallpaperScale": 1.0,
+    "wallpaperOffsetX": 0.0,
+    "wallpaperOffsetY": 0.0,
+    "reduceMotion": false
+  },
+  "dialogue": [
+    {
+      "scene": "Triggered",
+      "text": "該讀書囉！先深呼吸，回到你的目標吧。",
+      "audioUri": "assets/voice.mp3",
+      "transcript": "該讀書囉！先深呼吸，回到你的目標吧。"
+    },
+    {
+      "scene": "FirstSkip",
+      "text": "可以休息一下，但這次略過只會留在本機紀錄。",
+      "transcript": "可以休息一下，但這次略過只會留在本機紀錄。"
+    },
+    {
+      "scene": "SessionEnded",
+      "text": "專注時段已結束，辛苦了。",
+      "transcript": "專注時段已結束，辛苦了。"
+    }
+  ]
+}

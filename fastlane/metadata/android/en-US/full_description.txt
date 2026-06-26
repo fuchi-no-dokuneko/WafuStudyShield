@@ -1,0 +1,5 @@
+StudyShield is a voluntary Android focus reminder for students.
+
+Students choose distracting apps and study schedules. During an active rule, StudyShield uses Android Accessibility to observe only the current foreground app package name and display a reminder overlay when a selected app opens.
+
+StudyShield does not read messages, passwords, screen text, contacts, photos, location, browser history, or social content. It does not tap, swipe, capture screenshots, automate other apps, block Settings, block emergency calls, or hide from the user. The app does not request internet access and stores rules and local reflection records on device.
