@@ -7,6 +7,7 @@ plugins {
 android {
     namespace = "dev.studyshield"
     compileSdk = 36
+    val releaseStoreFileProvider = providers.gradleProperty("RELEASE_STORE_FILE")
 
     defaultConfig {
         applicationId = "dev.studyshield"
@@ -35,6 +36,26 @@ android {
             "META-INF/LICENSE.md",
             "META-INF/LICENSE-notice.md"
         )
+    }
+
+    signingConfigs {
+        create("release") {
+            val releaseStoreFile = releaseStoreFileProvider.orNull
+            if (!releaseStoreFile.isNullOrBlank()) {
+                storeFile = file(releaseStoreFile)
+                storePassword = providers.gradleProperty("RELEASE_STORE_PASSWORD").orNull
+                keyAlias = providers.gradleProperty("RELEASE_KEY_ALIAS").orNull
+                keyPassword = providers.gradleProperty("RELEASE_KEY_PASSWORD").orNull
+            }
+        }
+    }
+
+    buildTypes {
+        release {
+            if (releaseStoreFileProvider.isPresent) {
+                signingConfig = signingConfigs.getByName("release")
+            }
+        }
     }
 }
 
