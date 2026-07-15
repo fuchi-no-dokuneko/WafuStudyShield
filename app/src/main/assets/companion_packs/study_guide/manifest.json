@@ -29,8 +29,8 @@
     },
     {
       "scene": "FirstSkip",
-      "text": "Skipping once is recorded only for your reflection.",
-      "transcript": "Skipping once is recorded only for your reflection."
+      "text": "Paused for five minutes. This record stays local.",
+      "transcript": "Paused for five minutes. This record stays local."
     },
     {
       "scene": "SessionEnded",

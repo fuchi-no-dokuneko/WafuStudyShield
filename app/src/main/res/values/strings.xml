@@ -1,5 +1,5 @@
 <resources>
     <string name="app_name">StudyShield</string>
     <string name="accessibility_service_label">StudyShield focus reminders</string>
-    <string name="accessibility_service_description">StudyShield only observes the package name of the current foreground app so it can show a reminder for apps and study times you choose. It does not read messages, passwords, screen text, contacts, photos, location, or web history.</string>
+    <string name="accessibility_service_description">StudyShield compares foreground app package names with apps and study times you choose. Optional Usage Access improves detection for already-open apps. It does not read messages, passwords, screen text, contacts, photos, location, or web history.</string>
 </resources>

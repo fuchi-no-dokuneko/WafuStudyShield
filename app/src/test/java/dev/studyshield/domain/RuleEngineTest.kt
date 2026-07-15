@@ -92,18 +92,6 @@ class RuleEngineTest {
         assertNull(reminder)
     }
 
-    @Test
-    fun plusAllSkipsEveryEnabledTargetWhenEndingFocusSession() {
-        val skipList = SkipList.empty().plusAll(
-            listOf("com.social.app", "com.video.app", "com.social.app"),
-            clock.instant().plusSeconds(60)
-        )
-
-        assertEquals(true, skipList.isSkipped("com.social.app", clock.instant()))
-        assertEquals(true, skipList.isSkipped("com.video.app", clock.instant()))
-        assertEquals(false, skipList.isSkipped("com.notes.app", clock.instant()))
-    }
-
     private fun profile(
         id: Long = 1,
         intensity: ReminderIntensity = ReminderIntensity.Gentle,

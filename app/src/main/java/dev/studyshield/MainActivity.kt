@@ -1,5 +1,6 @@
 package dev.studyshield
 
+import android.Manifest
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
@@ -29,6 +30,7 @@ import androidx.compose.material.icons.outlined.Audiotrack
 import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.Image
 import androidx.compose.material.icons.outlined.IosShare
+import androidx.compose.material.icons.outlined.Notifications
 import androidx.compose.material.icons.outlined.RemoveCircle
 import androidx.compose.material.icons.outlined.Refresh
 import androidx.compose.material.icons.outlined.Save
@@ -38,6 +40,7 @@ import androidx.compose.material.icons.outlined.SmartDisplay
 import androidx.compose.material.icons.outlined.Tune
 import androidx.compose.material.icons.outlined.UploadFile
 import androidx.compose.material.icons.outlined.Wallpaper
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -55,12 +58,14 @@ import androidx.compose.material3.Slider
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -139,15 +144,39 @@ class MainActivity : ComponentActivity() {
                     activeExport = null
                     viewModel.consumeCompanionExport()
                 }
+                val notificationPermissionLauncher = rememberLauncherForActivityResult(
+                    contract = ActivityResultContracts.RequestPermission()
+                ) {
+                    viewModel.refreshPlatformState()
+                    SetupReminderScheduler.sync(context)
+                }
                 LaunchedEffect(state.pendingCompanionExport?.id) {
                     val export = state.pendingCompanionExport ?: return@LaunchedEffect
                     activeExport = export
                     exportPicker.launch(export.fileName)
                 }
+                LaunchedEffect(
+                    state.accessibilityEnabled,
+                    state.usageAccessEnabled,
+                    state.notificationPermissionEnabled
+                ) {
+                    SetupReminderScheduler.sync(context)
+                }
                 StudyShieldApp(
                     state = state,
                     onOpenAccessibility = {
                         startActivity(AccessibilityStatus(this).settingsIntent())
+                    },
+                    onOpenUsageAccess = {
+                        startActivity(UsageAccessStatus(this).settingsIntent())
+                    },
+                    onOpenNotifications = {
+                        val notificationStatus = NotificationPermissionStatus(this)
+                        if (notificationStatus.canRequestRuntimePermission()) {
+                            notificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+                        } else {
+                            startActivity(notificationStatus.settingsIntent())
+                        }
                     },
                     onRefresh = viewModel::refreshPlatformState,
                     onName = viewModel::updateName,
@@ -208,6 +237,7 @@ class MainActivity : ComponentActivity() {
     override fun onResume() {
         super.onResume()
         viewModel.refreshPlatformState()
+        SetupReminderScheduler.sync(this)
     }
 }
 
@@ -216,6 +246,8 @@ class MainActivity : ComponentActivity() {
 private fun StudyShieldApp(
     state: MainUiState,
     onOpenAccessibility: () -> Unit,
+    onOpenUsageAccess: () -> Unit,
+    onOpenNotifications: () -> Unit,
     onRefresh: () -> Unit,
     onName: (String) -> Unit,
     onEnabled: (Boolean) -> Unit,
@@ -254,6 +286,26 @@ private fun StudyShieldApp(
     onSave: () -> Unit,
     onClearData: () -> Unit
 ) {
+    val missingPermissions = remember(
+        state.accessibilityEnabled,
+        state.usageAccessEnabled,
+        state.notificationPermissionEnabled
+    ) {
+        buildList {
+            if (!state.accessibilityEnabled) add(SetupPermission.Accessibility)
+            if (!state.usageAccessEnabled) add(SetupPermission.UsageAccess)
+            if (!state.notificationPermissionEnabled) add(SetupPermission.Notifications)
+        }
+    }
+    val missingSignature = missingPermissions.joinToString("|") { it.name }
+    var dismissedMissingSignature by rememberSaveable { mutableStateOf<String?>(null) }
+    var closeConfirmationVisible by rememberSaveable { mutableStateOf(false) }
+    LaunchedEffect(missingSignature) {
+        if (missingSignature.isBlank()) {
+            dismissedMissingSignature = null
+            closeConfirmationVisible = false
+        }
+    }
     Scaffold(
         topBar = {
             TopAppBar(
@@ -278,7 +330,11 @@ private fun StudyShieldApp(
             item {
                 StatusPanel(
                     accessibilityEnabled = state.accessibilityEnabled,
-                    onOpenAccessibility = onOpenAccessibility
+                    usageAccessEnabled = state.usageAccessEnabled,
+                    notificationPermissionEnabled = state.notificationPermissionEnabled,
+                    onOpenAccessibility = onOpenAccessibility,
+                    onOpenUsageAccess = onOpenUsageAccess,
+                    onOpenNotifications = onOpenNotifications
                 )
             }
             item {
@@ -353,6 +409,39 @@ private fun StudyShieldApp(
             item { Spacer(Modifier.height(18.dp)) }
         }
     }
+    if (missingPermissions.isNotEmpty() && dismissedMissingSignature != missingSignature) {
+        PermissionSetupDialog(
+            missingPermissions = missingPermissions,
+            onOpenAccessibility = onOpenAccessibility,
+            onOpenUsageAccess = onOpenUsageAccess,
+            onOpenNotifications = onOpenNotifications,
+            onRequestClose = { closeConfirmationVisible = true }
+        )
+    }
+    if (closeConfirmationVisible) {
+        AlertDialog(
+            onDismissRequest = { closeConfirmationVisible = false },
+            title = { Text("Close setup reminder?") },
+            text = {
+                Text("StudyShield cannot keep focus reminders active until every required permission is enabled.")
+            },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        dismissedMissingSignature = missingSignature
+                        closeConfirmationVisible = false
+                    }
+                ) {
+                    Text("Close anyway")
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { closeConfirmationVisible = false }) {
+                    Text("Keep open")
+                }
+            }
+        )
+    }
 }
 
 @Composable
@@ -386,7 +475,11 @@ private fun ProfileSelectorPanel(
 @Composable
 private fun StatusPanel(
     accessibilityEnabled: Boolean,
-    onOpenAccessibility: () -> Unit
+    usageAccessEnabled: Boolean,
+    notificationPermissionEnabled: Boolean,
+    onOpenAccessibility: () -> Unit,
+    onOpenUsageAccess: () -> Unit,
+    onOpenNotifications: () -> Unit
 ) {
     ElevatedCard(
         modifier = Modifier.fillMaxWidth(),
@@ -409,6 +502,42 @@ private fun StatusPanel(
                     Text("Settings")
                 }
             }
+            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                Icon(Icons.Outlined.Apps, contentDescription = null)
+                Column(Modifier.weight(1f)) {
+                    Text("Usage access", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold)
+                    Text(
+                        if (usageAccessEnabled) "Enabled: 5-second app check active" else "Not enabled: event-only detection",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+                OutlinedButton(onClick = onOpenUsageAccess) {
+                    Icon(Icons.Outlined.Apps, contentDescription = null)
+                    Spacer(Modifier.size(8.dp))
+                    Text("Settings")
+                }
+            }
+            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                Icon(Icons.Outlined.Notifications, contentDescription = null)
+                Column(Modifier.weight(1f)) {
+                    Text("Setup notifications", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold)
+                    Text(
+                        if (notificationPermissionEnabled) {
+                            "Enabled: 5-minute setup reminders active when needed"
+                        } else {
+                            "Not enabled: setup reminders cannot appear"
+                        },
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+                OutlinedButton(onClick = onOpenNotifications) {
+                    Icon(Icons.Outlined.Notifications, contentDescription = null)
+                    Spacer(Modifier.size(8.dp))
+                    Text("Allow")
+                }
+            }
             DisclosureText()
         }
     }
@@ -423,9 +552,99 @@ private fun DisclosureText() {
     ) {
         Text(
             modifier = Modifier.padding(12.dp),
-            text = "The service compares only the foreground package name with apps and times you choose. It does not read messages, passwords, screen text, contacts, photos, location, browser history, or Accessibility node content.",
+            text = "The service compares foreground app package names with apps and times you choose. Usage Access enables a 5-second app check. Setup notifications can remind you every five minutes while required permissions are missing. It does not read messages, passwords, screen text, contacts, photos, location, browser history, or Accessibility node content.",
             style = MaterialTheme.typography.bodyMedium
         )
+    }
+}
+
+@Composable
+private fun PermissionSetupDialog(
+    missingPermissions: List<SetupPermission>,
+    onOpenAccessibility: () -> Unit,
+    onOpenUsageAccess: () -> Unit,
+    onOpenNotifications: () -> Unit,
+    onRequestClose: () -> Unit
+) {
+    Dialog(
+        onDismissRequest = onRequestClose,
+        properties = DialogProperties(
+            usePlatformDefaultWidth = false,
+            dismissOnBackPress = false,
+            dismissOnClickOutside = false
+        )
+    ) {
+        Surface(
+            modifier = Modifier.fillMaxSize(),
+            color = MaterialTheme.colorScheme.scrim.copy(alpha = 0.72f)
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(20.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
+            ) {
+                Card(modifier = Modifier.fillMaxWidth()) {
+                    Column(Modifier.padding(18.dp), verticalArrangement = Arrangement.spacedBy(14.dp)) {
+                        SectionTitle(icon = Icons.Outlined.Shield, title = "Setup required")
+                        Text(
+                            "Enable every required permission before relying on StudyShield focus reminders.",
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                        missingPermissions.forEach { permission ->
+                            SetupPermissionRow(
+                                permission = permission,
+                                onOpenAccessibility = onOpenAccessibility,
+                                onOpenUsageAccess = onOpenUsageAccess,
+                                onOpenNotifications = onOpenNotifications
+                            )
+                        }
+                        OutlinedButton(onClick = onRequestClose, modifier = Modifier.fillMaxWidth()) {
+                            Text("Close")
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun SetupPermissionRow(
+    permission: SetupPermission,
+    onOpenAccessibility: () -> Unit,
+    onOpenUsageAccess: () -> Unit,
+    onOpenNotifications: () -> Unit
+) {
+    val onClick = when (permission) {
+        SetupPermission.Accessibility -> onOpenAccessibility
+        SetupPermission.UsageAccess -> onOpenUsageAccess
+        SetupPermission.Notifications -> onOpenNotifications
+    }
+    val icon = when (permission) {
+        SetupPermission.Accessibility -> Icons.Outlined.AccessibilityNew
+        SetupPermission.UsageAccess -> Icons.Outlined.Apps
+        SetupPermission.Notifications -> Icons.Outlined.Notifications
+    }
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(10.dp)
+    ) {
+        Icon(icon, contentDescription = null)
+        Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(2.dp)) {
+            Text(permission.title, style = MaterialTheme.typography.titleSmall, fontWeight = FontWeight.SemiBold)
+            Text(
+                permission.detail,
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+        }
+        Button(onClick = onClick) {
+            Text(if (permission == SetupPermission.Notifications) "Allow" else "Open")
+        }
     }
 }
 
@@ -690,8 +909,7 @@ private fun OverlayPreviewDialog(
             audioResult = PromptAudioResult.TextFallback("Preview mode."),
             layout = LayoutResolver().resolve(reminder.profile.layout, reminder.resolvedSide),
             onReturnHome = onDismiss,
-            onSkipOnce = onDismiss,
-            onEndFocus = onDismiss
+            onPauseFiveMinutes = onDismiss
         )
     }
 }

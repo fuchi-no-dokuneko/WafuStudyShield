@@ -56,9 +56,9 @@ Artifacts:
 
 | Artifact | SHA-256 |
 |---|---|
-| `app/build/outputs/apk/debug/app-debug.apk` | `9b2b4cdbe1578a2eb97a0ee932c2b7d65d851303ae778ffcf66a749534603541` |
+| `app/build/outputs/apk/debug/app-debug.apk` | `836b0de7fad8a22e629ae88c0a4c4b4eea9d2e423a10aaaade51d87bae6acc5c` |
 | `app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk` | `c22442d505bd40d585162e7eb5b9a2198eef8e4c1ef9f4cf64759d8e53745619` |
-| `app/src/main/assets/companion_packs/codex_cat_girl/codex-cat-girl.studyshield-pack.zip` | `48c938eb9094dff5f470d525e40bfaa428d294be5a4c53820184205edd1d65aa` |
+| `app/src/main/assets/companion_packs/codex_cat_girl/codex-cat-girl.studyshield-pack.zip` | `29568a4204798b85bb552f3f274f62cb7d9fc914faa491f0f95037ac8b8671ba` |
 
 APK badging summary:
 
@@ -67,4 +67,6 @@ APK badging summary:
 - Min SDK: 26
 - Target SDK: 36
 - Accessibility component: present
-- Requested dangerous or network permissions: none
+- Requested dangerous permission: `android.permission.POST_NOTIFICATIONS`
+- Requested network permissions: none
+- Optional app-op permission declared: `android.permission.PACKAGE_USAGE_STATS`

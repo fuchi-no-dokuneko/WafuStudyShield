@@ -20,8 +20,7 @@ enum class ReminderScene {
 
 enum class UserOutcome {
     ReturnedHome,
-    SkippedOnce,
-    EndedFocus,
+    PausedFiveMinutes,
     DismissedByRuleChange,
     DismissedByExcludedScreen
 }

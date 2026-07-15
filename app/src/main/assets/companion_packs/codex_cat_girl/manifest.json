@@ -34,8 +34,8 @@
     },
     {
       "scene": "FirstSkip",
-      "text": "可以休息一下，但這次略過只會留在本機紀錄。",
-      "transcript": "可以休息一下，但這次略過只會留在本機紀錄。"
+      "text": "已暫停五分鐘，記錄只會留在本機。",
+      "transcript": "已暫停五分鐘，記錄只會留在本機。"
     },
     {
       "scene": "SessionEnded",

@@ -2,13 +2,13 @@
 
 ## Principles
 
-StudyShield is offline-first, student-controlled, and explicit about exit paths. The accessibility service is used only to identify foreground package changes. It does not inspect Accessibility node trees, perform gestures, automate other apps, or hide itself.
+StudyShield is offline-first, student-controlled, and explicit about exit paths. The accessibility service is used only to identify foreground package changes. Optional Usage Access lets the service re-check the current foreground app every five seconds. The app does not inspect Accessibility node trees, perform gestures, automate other apps, or hide itself.
 
 ## Runtime Flow
 
 ```text
 Profile saved in Room
-  -> AccessibilityService receives TYPE_WINDOW_STATE_CHANGED
+  -> AccessibilityService receives TYPE_WINDOW_STATE_CHANGED, or Usage Access polling reports the foreground app
   -> RuleEngine compares package name, profile schedules, day, enabled target apps, and skips
   -> Repository attaches the selected companion pack and scene dialogue
   -> OverlayController creates TYPE_ACCESSIBILITY_OVERLAY
@@ -53,7 +53,7 @@ The service excludes StudyShield, Android system, Settings, permission controlle
 
 ## No Network Design
 
-The app manifest intentionally omits `android.permission.INTERNET`. Any future feature requiring servers, analytics, ads, remote chat, or cross-device sync conflicts with the project scope unless the product plan is explicitly revised.
+The app manifest intentionally omits `android.permission.INTERNET`. It intentionally declares `android.permission.PACKAGE_USAGE_STATS` so users can enable Usage Access for foreground-app polling. Any future feature requiring servers, analytics, ads, remote chat, or cross-device sync conflicts with the project scope unless the product plan is explicitly revised.
 
 Companion pack sharing is file-based. Import copies zip-contained assets into app-private storage, export writes a new zip containing `manifest.json` plus readable image and MP3 assets, and no network transport is implemented.
 

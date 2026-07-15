@@ -26,7 +26,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.PauseCircle
-import androidx.compose.material.icons.outlined.StopCircle
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -72,8 +71,7 @@ fun FocusOverlayContent(
     audioResult: PromptAudioResult,
     layout: ResolvedOverlayLayout,
     onReturnHome: () -> Unit,
-    onSkipOnce: () -> Unit,
-    onEndFocus: () -> Unit
+    onPauseFiveMinutes: () -> Unit
 ) {
     StudyShieldTheme {
         val wallpaper by rememberImageBitmap(reminder.companionPack?.wallpaperUri)
@@ -179,7 +177,7 @@ fun FocusOverlayContent(
 
             Surface(
                 modifier = Modifier
-                    .offset(y = maxHeight.availableFor(172.dp))
+                    .offset(y = maxHeight.availableFor(116.dp))
                     .fillMaxWidth(),
                 color = Color(0xFFF8F7F2),
                 contentColor = Color(0xFF1F2937),
@@ -200,19 +198,11 @@ fun FocusOverlayContent(
                     }
                     OutlinedButton(
                         modifier = Modifier.fillMaxWidth(),
-                        onClick = onSkipOnce
+                        onClick = onPauseFiveMinutes
                     ) {
                         Icon(Icons.Outlined.PauseCircle, contentDescription = null)
                         Spacer(Modifier.size(8.dp))
-                        Text("Skip once")
-                    }
-                    OutlinedButton(
-                        modifier = Modifier.fillMaxWidth(),
-                        onClick = onEndFocus
-                    ) {
-                        Icon(Icons.Outlined.StopCircle, contentDescription = null)
-                        Spacer(Modifier.size(8.dp))
-                        Text("End focus")
+                        Text("Pause 5 min")
                     }
                 }
             }

@@ -1,6 +1,6 @@
 # Play Console Accessibility Declaration
 
-StudyShield is a voluntary student focus reminder. The AccessibilityService is used only to detect foreground app package changes and show a full-screen study reminder when a user-selected app opens during a user-configured study schedule.
+StudyShield is a voluntary student focus reminder. The AccessibilityService is used only to detect foreground app package changes and show a full-screen study reminder when a user-selected app opens during a user-configured study schedule. Optional Usage Access lets the service poll foreground app transitions every five seconds so already-open apps can still trigger reminders when schedules become active. Notification permission is used only for local five-minute setup reminders while required permissions are disabled.
 
 The service:
 
@@ -12,4 +12,4 @@ The service:
 - Does not collect message text, passwords, social content, contacts, location, browser history, or media-library contents.
 - Does not upload data or use analytics, advertising, cloud, or remote-chat services.
 
-All focus profiles, selected package names, companion pack indexes, dialogue metadata, and focus event records remain local to the device. Users can skip a reminder, end a focus session, disable the AccessibilityService in Android Settings, edit rules, delete local records, or uninstall the app at any time.
+All focus profiles, selected package names, companion pack indexes, dialogue metadata, foreground package transition checks, notification setup reminders, and focus event records remain local to the device. Users can pause a reminder for five minutes, disable Accessibility, Usage Access, or notifications in Android Settings, edit rules, delete local records, or uninstall the app at any time.

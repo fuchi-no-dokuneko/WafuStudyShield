@@ -65,8 +65,7 @@ class StudyShieldOverlayController(
                     audioResult = audioResult.value,
                     layout = resolvedLayout,
                     onReturnHome = { onOutcome(UserOutcome.ReturnedHome) },
-                    onSkipOnce = { onOutcome(UserOutcome.SkippedOnce) },
-                    onEndFocus = { onOutcome(UserOutcome.EndedFocus) }
+                    onPauseFiveMinutes = { onOutcome(UserOutcome.PausedFiveMinutes) }
                 )
             }
         }

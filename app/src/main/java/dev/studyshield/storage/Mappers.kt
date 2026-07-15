@@ -259,8 +259,8 @@ fun sampleDialogue(packId: Long): List<DialogueCueEntity> {
         DialogueCue(
             packId = packId,
             scene = ReminderScene.FirstSkip,
-            text = "Skipping once is recorded only for your reflection.",
-            transcript = "Skipping once is recorded only for your reflection."
+            text = "Paused for five minutes. This record stays local.",
+            transcript = "Paused for five minutes. This record stays local."
         ).toEntity(packId),
         DialogueCue(
             packId = packId,

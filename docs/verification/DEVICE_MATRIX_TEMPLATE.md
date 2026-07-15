@@ -27,9 +27,11 @@ Record pass/fail, device, and notes for each item.
 
 - Accessibility disabled: app lets user edit rules and preview without claiming active blocking.
 - Accessibility enabled: selected target app opens and StudyShield overlay appears.
+- Usage Access disabled: app still works through foreground app change events.
+- Usage Access enabled: already-open target app triggers within 5 seconds after a schedule becomes active.
 - Non-target app opens and no overlay appears.
 - Android Settings, permission screens, dialer, telecom, and system UI do not show blocking overlays.
-- Return home, skip once, and end focus remove overlay and stop audio.
+- Return home and pause 5 min remove overlay and stop audio.
 - Service interrupted or disabled removes overlay and stops audio.
 - Media volume zero, silent mode, and vibrate mode show full transcript fallback.
 - Missing or invalid MP3 URI shows full transcript fallback.

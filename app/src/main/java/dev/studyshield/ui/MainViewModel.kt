@@ -9,8 +9,10 @@ import dev.studyshield.companion.CompanionPackArchiveImporter
 import dev.studyshield.AccessibilityStatus
 import dev.studyshield.InstalledAppInfo
 import dev.studyshield.InstalledAppsReader
+import dev.studyshield.NotificationPermissionStatus
 import dev.studyshield.PersistedUriPermissionStore
 import dev.studyshield.StudyShieldApplication
+import dev.studyshield.UsageAccessStatus
 import dev.studyshield.companion.CompanionPackManifestCodec
 import dev.studyshield.companion.CompanionPackValidationResult
 import dev.studyshield.companion.CompanionPackValidator
@@ -63,6 +65,8 @@ data class MainUiState(
     val installedApps: List<InstalledAppInfo> = emptyList(),
     val editor: ProfileEditorState = ProfileEditorState(),
     val accessibilityEnabled: Boolean = false,
+    val usageAccessEnabled: Boolean = false,
+    val notificationPermissionEnabled: Boolean = false,
     val todayCount: Int = 0,
     val recentEvents: List<FocusEventEntity> = emptyList(),
     val saving: Boolean = false,
@@ -81,10 +85,14 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     private val repository: StudyShieldRepository = app.repository
     private val installedAppsReader = InstalledAppsReader(application)
     private val accessibilityStatus = AccessibilityStatus(application)
+    private val usageAccessStatus = UsageAccessStatus(application)
+    private val notificationPermissionStatus = NotificationPermissionStatus(application)
     private val uriPermissionStore = PersistedUriPermissionStore(application)
     private val editor = MutableStateFlow(ProfileEditorState())
     private val installedApps = MutableStateFlow(emptyList<InstalledAppInfo>())
     private val accessibilityEnabled = MutableStateFlow(false)
+    private val usageAccessEnabled = MutableStateFlow(false)
+    private val notificationPermissionEnabled = MutableStateFlow(false)
     private val saving = MutableStateFlow(false)
     private val pendingCompanionExport = MutableStateFlow<CompanionExport?>(null)
     private var editorSeeded = false
@@ -95,6 +103,8 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         installedApps,
         editor,
         accessibilityEnabled,
+        usageAccessEnabled,
+        notificationPermissionEnabled,
         repository.observeTodayEventCount(),
         repository.observeRecentEvents(),
         saving,
@@ -108,17 +118,21 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         val apps = values[2] as List<InstalledAppInfo>
         val editorState = values[3] as ProfileEditorState
         val access = values[4] as Boolean
-        val count = values[5] as Int
+        val usageAccess = values[5] as Boolean
+        val notificationAccess = values[6] as Boolean
+        val count = values[7] as Int
         @Suppress("UNCHECKED_CAST")
-        val events = values[6] as List<FocusEventEntity>
-        val isSaving = values[7] as Boolean
-        val export = values[8] as CompanionExport?
+        val events = values[8] as List<FocusEventEntity>
+        val isSaving = values[9] as Boolean
+        val export = values[10] as CompanionExport?
         MainUiState(
             profiles = profiles,
             companionPacks = packs,
             installedApps = apps,
             editor = editorState,
             accessibilityEnabled = access,
+            usageAccessEnabled = usageAccess,
+            notificationPermissionEnabled = notificationAccess,
             todayCount = count,
             recentEvents = events,
             saving = isSaving,
@@ -144,6 +158,8 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     fun refreshPlatformState() {
         installedApps.value = installedAppsReader.launcherApps()
         accessibilityEnabled.value = accessibilityStatus.isStudyShieldEnabled()
+        usageAccessEnabled.value = usageAccessStatus.isUsageAccessEnabled()
+        notificationPermissionEnabled.value = notificationPermissionStatus.isNotificationPermissionEnabled()
     }
 
     fun updateName(value: String) {

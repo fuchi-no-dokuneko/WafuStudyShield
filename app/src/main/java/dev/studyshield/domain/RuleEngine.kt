@@ -84,10 +84,6 @@ data class SkipList(
         return SkipList(skipsByPackage + (packageName to until))
     }
 
-    fun plusAll(packageNames: Iterable<String>, until: Instant): SkipList {
-        return SkipList(skipsByPackage + packageNames.distinct().associateWith { until })
-    }
-
     companion object {
         fun empty(): SkipList = SkipList(emptyMap())
     }

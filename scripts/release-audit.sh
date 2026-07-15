@@ -44,16 +44,21 @@ for permission in \
   "android.permission.ACCESS_COARSE_LOCATION" \
   "android.permission.READ_CONTACTS" \
   "android.permission.CALL_PHONE" \
-  "android.permission.SYSTEM_ALERT_WINDOW"; do
+  "android.permission.SYSTEM_ALERT_WINDOW" \
+  "android.permission.QUERY_ALL_PACKAGES"; do
   if grep -Fq "$permission" <<<"$PERMISSIONS"; then
     fail "unexpected merged APK permission: $permission"
   fi
 done
 
 mapfile -t USES_PERMISSIONS < <(sed -n "s/^uses-permission: name='\([^']*\)'.*/\1/p" <<<"$PERMISSIONS")
-if [[ "${#USES_PERMISSIONS[@]}" -ne 1 ||
-      "${USES_PERMISSIONS[0]}" != "dev.studyshield.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION" ]]; then
-  fail "merged APK must request only the AndroidX dynamic receiver permission."
+EXPECTED_PERMISSIONS=(
+  "android.permission.PACKAGE_USAGE_STATS"
+  "android.permission.POST_NOTIFICATIONS"
+  "dev.studyshield.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION"
+)
+if [[ "$(printf '%s\n' "${USES_PERMISSIONS[@]}" | sort)" != "$(printf '%s\n' "${EXPECTED_PERMISSIONS[@]}" | sort)" ]]; then
+  fail "merged APK must request only Usage Access, notifications, and the AndroidX dynamic receiver permission."
 fi
 
 BADGING="$(aapt2 dump badging "$APK")"
@@ -177,6 +182,10 @@ grep -Fq "ForegroundEventPolicy.actionFor" "$ACCESSIBILITY_SERVICE_SOURCE" ||
   fail "Accessibility service must route own-package foreground events through ForegroundEventPolicy."
 grep -Fq "ForegroundEventAction.HideCurrentReminder" "$ACCESSIBILITY_SERVICE_SOURCE" ||
   fail "Accessibility service must hide reminders when StudyShield itself comes forward."
+grep -Fq "FOREGROUND_POLL_INTERVAL_MILLIS = 5_000L" "$ACCESSIBILITY_SERVICE_SOURCE" ||
+  fail "Accessibility service must poll UsageStats foreground state every five seconds."
+grep -Fq "UsageStatsForegroundReader" "$ACCESSIBILITY_SERVICE_SOURCE" ||
+  fail "Accessibility service must use UsageStats foreground polling when Usage Access is granted."
 
 PROMPT_AUDIO_PLAYER_SOURCE="app/src/main/java/dev/studyshield/media/PromptAudioPlayer.kt"
 grep -Fq "PromptAudioPolicy.fallbackReason" "$PROMPT_AUDIO_PLAYER_SOURCE" ||
