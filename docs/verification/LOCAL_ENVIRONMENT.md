@@ -56,14 +56,16 @@ Artifacts:
 
 | Artifact | SHA-256 |
 |---|---|
-| `app/build/outputs/apk/debug/app-debug.apk` | `66262d2e994294c4a686aea5e29d6caf41a2e2f5a7b17822369de500d7578f43` |
+| `app/build/outputs/apk/debug/app-debug.apk` | `667cf352066f3678ef27e903d6fcc6a4be20be8488b058782a7125fa3a5e60bb` |
+| `app/build/outputs/apk/release/app-release.apk` | `9c870dab6c714de281913ed68b24f2ed32ae51cd2129b211ee5b256edf54e1e4` |
+| `app/build/outputs/bundle/release/app-release.aab` | `16e0142bce367ed3c1c3f877346b2d03aaa8dbe090323df54931f495b755ae79` |
 | `app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk` | `c22442d505bd40d585162e7eb5b9a2198eef8e4c1ef9f4cf64759d8e53745619` |
 | `app/src/main/assets/companion_packs/codex_cat_girl/codex-cat-girl.studyshield-pack.zip` | `29568a4204798b85bb552f3f274f62cb7d9fc914faa491f0f95037ac8b8671ba` |
 
 APK badging summary:
 
 - Package: `dev.studyshield`
-- Version: `0.1.1` (`versionCode` 2)
+- Version: `0.1.2` (`versionCode` 3)
 - Min SDK: 26
 - Target SDK: 36
 - Accessibility component: present

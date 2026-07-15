@@ -7,6 +7,7 @@
 - Verify `aapt2 dump permissions app/build/outputs/apk/debug/app-debug.apk` contains only `android.permission.PACKAGE_USAGE_STATS`, `android.permission.POST_NOTIFICATIONS`, and the AndroidX dynamic receiver permission, with no network, location, contacts, broad media, screenshot, package-inventory, or overlay-management permission.
 - Verify `aapt2 dump badging app/build/outputs/apk/debug/app-debug.apk` reports package `dev.studyshield`, min SDK 26, target SDK 36, launchable `MainActivity`, and `provides-component:'accessibility'`.
 - Verify `apksigner verify --verbose app/build/outputs/apk/debug/app-debug.apk` succeeds for the installable APK.
+- Verify `apksigner verify --verbose --print-certs app/build/outputs/apk/release/app-release.apk` succeeds before publishing a GitHub Release APK.
 - Verify the target SDK matches the highest installed and tested Android SDK for the release environment.
 - Migrate Room schema intentionally and commit exported schemas.
 

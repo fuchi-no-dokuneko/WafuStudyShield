@@ -8,13 +8,17 @@ android {
     namespace = "dev.studyshield"
     compileSdk = 36
     val releaseStoreFileProvider = providers.gradleProperty("RELEASE_STORE_FILE")
+    val sideloadStoreFile = file("signing/wafustudyshield-sideload.p12")
+    val sideloadStorePassword = "wafustudyshield"
+    val sideloadKeyAlias = "wafustudyshield-sideload"
+    val sideloadKeyPassword = "wafustudyshield"
 
     defaultConfig {
         applicationId = "dev.studyshield"
         minSdk = 26
         targetSdk = 36
-        versionCode = 2
-        versionName = "0.1.1"
+        versionCode = 3
+        versionName = "0.1.2"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -46,15 +50,18 @@ android {
                 storePassword = providers.gradleProperty("RELEASE_STORE_PASSWORD").orNull
                 keyAlias = providers.gradleProperty("RELEASE_KEY_ALIAS").orNull
                 keyPassword = providers.gradleProperty("RELEASE_KEY_PASSWORD").orNull
+            } else {
+                storeFile = sideloadStoreFile
+                storePassword = sideloadStorePassword
+                keyAlias = sideloadKeyAlias
+                keyPassword = sideloadKeyPassword
             }
         }
     }
 
     buildTypes {
         release {
-            if (releaseStoreFileProvider.isPresent) {
-                signingConfig = signingConfigs.getByName("release")
-            }
+            signingConfig = signingConfigs.getByName("release")
         }
     }
 }

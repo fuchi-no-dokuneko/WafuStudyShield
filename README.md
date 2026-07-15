@@ -32,6 +32,8 @@ The debug APK is written to:
 app/build/outputs/apk/debug/app-debug.apk
 ```
 
+GitHub Releases publish a signed sideload APK named `WafuStudyShield-vX.Y.Z-sideload.apk`. The workflow uses private Android signing secrets when they are configured; otherwise it uses the repo-local public sideload key under `app/signing/` so Android can install and update release APKs. That fallback key is not a Play Store or private production signing key.
+
 The current debug build targets Android SDK 36. The merged APK requests no network, media-library, contacts, location, screenshot, package-inventory, or overlay-management permission. It intentionally declares Android Usage Access for optional foreground-app polling, notification permission for five-minute setup reminders, and AndroidX adds only the app-local dynamic receiver permission.
 
 Distribution notes and store disclosure drafts live under `docs/distribution/`.
