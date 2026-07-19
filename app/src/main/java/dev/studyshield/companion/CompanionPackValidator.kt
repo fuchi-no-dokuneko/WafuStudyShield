@@ -129,7 +129,8 @@ class CompanionPackValidator {
                 wallpaperScale = json.optDouble("wallpaperScale", 1.0).toFloat(),
                 wallpaperOffsetX = json.optDouble("wallpaperOffsetX", 0.0).toFloat(),
                 wallpaperOffsetY = json.optDouble("wallpaperOffsetY", 0.0).toFloat(),
-                reduceMotion = json.optBoolean("reduceMotion", false)
+                reduceMotion = json.optBoolean("reduceMotion", false),
+                randomizeActionOrder = json.optBoolean("randomizeActionOrder", false)
             )
         }.getOrElse { exception ->
             errors += "layout is invalid: ${exception.message ?: "values are outside supported ranges"}"

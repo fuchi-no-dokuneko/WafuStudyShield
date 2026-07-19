@@ -22,7 +22,7 @@ class CompanionPackManifestCodecTest {
                 compatibleVersion = 1,
                 characterImageUri = "content://local/character.webp",
                 wallpaperUri = "content://local/wallpaper.jpg",
-                layout = OverlayLayout(wallpaperScale = 1.5f)
+                layout = OverlayLayout(wallpaperScale = 1.5f, randomizeActionOrder = true)
             ),
             dialogue = listOf(
                 DialogueCue(
@@ -44,5 +44,6 @@ class CompanionPackManifestCodecTest {
         assertEquals("content://local/wallpaper.jpg", valid.bundle.pack.wallpaperUri)
         assertEquals("content://local/voice.mp3", valid.bundle.dialogue.first().audioUri)
         assertEquals(1.5f, valid.bundle.pack.layout.wallpaperScale, 0.0001f)
+        assertEquals(true, valid.bundle.pack.layout.randomizeActionOrder)
     }
 }

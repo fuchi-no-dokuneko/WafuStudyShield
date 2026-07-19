@@ -23,7 +23,8 @@
     "wallpaperScale": 1.0,
     "wallpaperOffsetX": 0.0,
     "wallpaperOffsetY": 0.0,
-    "reduceMotion": false
+    "reduceMotion": false,
+    "randomizeActionOrder": false
   },
   "dialogue": [
     {

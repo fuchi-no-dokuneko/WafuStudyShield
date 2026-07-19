@@ -14,7 +14,7 @@ import androidx.sqlite.db.SupportSQLiteDatabase
         DialogueCueEntity::class,
         FocusEventEntity::class
     ],
-    version = 2,
+    version = 3,
     exportSchema = true
 )
 abstract class StudyShieldDatabase : RoomDatabase() {
@@ -36,6 +36,13 @@ abstract class StudyShieldDatabase : RoomDatabase() {
                 db.execSQL("ALTER TABLE companion_packs ADD COLUMN wallpaperScale REAL NOT NULL DEFAULT 1.0")
                 db.execSQL("ALTER TABLE companion_packs ADD COLUMN wallpaperOffsetX REAL NOT NULL DEFAULT 0.0")
                 db.execSQL("ALTER TABLE companion_packs ADD COLUMN wallpaperOffsetY REAL NOT NULL DEFAULT 0.0")
+            }
+        }
+
+        val MIGRATION_2_3 = object : Migration(2, 3) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL("ALTER TABLE focus_profiles ADD COLUMN randomizeActionOrder INTEGER NOT NULL DEFAULT 0")
+                db.execSQL("ALTER TABLE companion_packs ADD COLUMN randomizeActionOrder INTEGER NOT NULL DEFAULT 0")
             }
         }
     }

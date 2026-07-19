@@ -23,7 +23,10 @@ class StudyShieldApplication : Application() {
             applicationContext,
             StudyShieldDatabase::class.java,
             "studyshield.db"
-        ).addMigrations(StudyShieldDatabase.MIGRATION_1_2).build()
+        ).addMigrations(
+            StudyShieldDatabase.MIGRATION_1_2,
+            StudyShieldDatabase.MIGRATION_2_3
+        ).build()
         repository = StudyShieldRepository(database, Clock.systemDefaultZone())
         appScope.launch {
             repository.ensureSeedData()

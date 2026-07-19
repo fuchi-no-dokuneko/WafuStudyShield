@@ -41,6 +41,7 @@ class CompanionPackManifestCodec {
             .put("wallpaperOffsetX", wallpaperOffsetX.toDouble())
             .put("wallpaperOffsetY", wallpaperOffsetY.toDouble())
             .put("reduceMotion", reduceMotion)
+            .put("randomizeActionOrder", randomizeActionOrder)
     }
 
     private fun List<DialogueCue>.toJson(): JSONArray {

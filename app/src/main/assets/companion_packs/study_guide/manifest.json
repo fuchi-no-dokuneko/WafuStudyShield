@@ -19,7 +19,8 @@
     "animation": "Fade",
     "backgroundMode": "Solid",
     "overlayDim": 0.72,
-    "reduceMotion": false
+    "reduceMotion": false,
+    "randomizeActionOrder": false
   },
   "dialogue": [
     {

@@ -97,7 +97,8 @@ fun FocusProfile.toEntity(): FocusProfileEntity {
         wallpaperScale = layout.wallpaperScale,
         wallpaperOffsetX = layout.wallpaperOffsetX,
         wallpaperOffsetY = layout.wallpaperOffsetY,
-        reduceMotion = layout.reduceMotion
+        reduceMotion = layout.reduceMotion,
+        randomizeActionOrder = layout.randomizeActionOrder
     )
 }
 
@@ -148,7 +149,8 @@ fun CompanionPack.toEntity(): CompanionPackEntity {
         wallpaperScale = layout.wallpaperScale,
         wallpaperOffsetX = layout.wallpaperOffsetX,
         wallpaperOffsetY = layout.wallpaperOffsetY,
-        reduceMotion = layout.reduceMotion
+        reduceMotion = layout.reduceMotion,
+        randomizeActionOrder = layout.randomizeActionOrder
     )
 }
 
@@ -180,7 +182,8 @@ private fun FocusProfileEntity.toLayout(): OverlayLayout {
         wallpaperScale = wallpaperScale,
         wallpaperOffsetX = wallpaperOffsetX,
         wallpaperOffsetY = wallpaperOffsetY,
-        reduceMotion = reduceMotion
+        reduceMotion = reduceMotion,
+        randomizeActionOrder = randomizeActionOrder
     )
 }
 
@@ -201,7 +204,8 @@ private fun CompanionPackEntity.toLayout(): OverlayLayout {
         wallpaperScale = wallpaperScale,
         wallpaperOffsetX = wallpaperOffsetX,
         wallpaperOffsetY = wallpaperOffsetY,
-        reduceMotion = reduceMotion
+        reduceMotion = reduceMotion,
+        randomizeActionOrder = randomizeActionOrder
     )
 }
 

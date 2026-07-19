@@ -28,7 +28,8 @@ data class FocusProfileEntity(
     val wallpaperScale: Float,
     val wallpaperOffsetX: Float,
     val wallpaperOffsetY: Float,
-    val reduceMotion: Boolean
+    val reduceMotion: Boolean,
+    val randomizeActionOrder: Boolean
 )
 
 @Entity(
@@ -101,7 +102,8 @@ data class CompanionPackEntity(
     val wallpaperScale: Float,
     val wallpaperOffsetX: Float,
     val wallpaperOffsetY: Float,
-    val reduceMotion: Boolean
+    val reduceMotion: Boolean,
+    val randomizeActionOrder: Boolean
 )
 
 @Entity(

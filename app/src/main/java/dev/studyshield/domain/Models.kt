@@ -117,7 +117,8 @@ data class OverlayLayout(
     val wallpaperScale: Float = 1.0f,
     val wallpaperOffsetX: Float = 0.0f,
     val wallpaperOffsetY: Float = 0.0f,
-    val reduceMotion: Boolean = false
+    val reduceMotion: Boolean = false,
+    val randomizeActionOrder: Boolean = false
 ) {
     init {
         listOf(

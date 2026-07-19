@@ -246,6 +246,10 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         updateEditor { it.copy(layout = it.layout.copy(reduceMotion = value)) }
     }
 
+    fun updateRandomizeActionOrder(value: Boolean) {
+        updateEditor { it.copy(layout = it.layout.copy(randomizeActionOrder = value)) }
+    }
+
     fun updateCompanionPack(packId: Long?) {
         if (packId == null) {
             updateEditor { it.copy(companionPackId = null, error = null) }

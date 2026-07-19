@@ -211,6 +211,7 @@ class MainActivity : ComponentActivity() {
                     onAppQuery = viewModel::updateAppQuery,
                     onSide = viewModel::updateSide,
                     onReduceMotion = viewModel::updateReduceMotion,
+                    onRandomizeActionOrder = viewModel::updateRandomizeActionOrder,
                     onCharacterScale = viewModel::updateCharacterScale,
                     onCharacterOpacity = viewModel::updateCharacterOpacity,
                     onCharacterAnchorX = viewModel::updateCharacterAnchorX,
@@ -273,6 +274,7 @@ private fun StudyShieldApp(
     onAppQuery: (String) -> Unit,
     onSide: (CompanionSide) -> Unit,
     onReduceMotion: (Boolean) -> Unit,
+    onRandomizeActionOrder: (Boolean) -> Unit,
     onCharacterScale: (Float) -> Unit,
     onCharacterOpacity: (Float) -> Unit,
     onCharacterAnchorX: (Float) -> Unit,
@@ -378,6 +380,7 @@ private fun StudyShieldApp(
                     onPreview = onPreview,
                     onSide = onSide,
                     onReduceMotion = onReduceMotion,
+                    onRandomizeActionOrder = onRandomizeActionOrder,
                     onCharacterScale = onCharacterScale,
                     onCharacterOpacity = onCharacterOpacity,
                     onCharacterAnchorX = onCharacterAnchorX,
@@ -770,6 +773,7 @@ private fun CompanionPanel(
     onPreview: () -> Unit,
     onSide: (CompanionSide) -> Unit,
     onReduceMotion: (Boolean) -> Unit,
+    onRandomizeActionOrder: (Boolean) -> Unit,
     onCharacterScale: (Float) -> Unit,
     onCharacterOpacity: (Float) -> Unit,
     onCharacterAnchorX: (Float) -> Unit,
@@ -877,6 +881,20 @@ private fun CompanionPanel(
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text("Reduce motion", modifier = Modifier.weight(1f))
                 Switch(checked = editor.layout.reduceMotion, onCheckedChange = onReduceMotion)
+            }
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(2.dp)) {
+                    Text("Random reminder buttons")
+                    Text(
+                        "Each new reminder can swap the Pause 5 min and Return home positions.",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+                Checkbox(
+                    checked = editor.layout.randomizeActionOrder,
+                    onCheckedChange = onRandomizeActionOrder
+                )
             }
 
             SliderSetting("Character X", editor.layout.characterAnchorX, 0f..1f, onCharacterAnchorX)

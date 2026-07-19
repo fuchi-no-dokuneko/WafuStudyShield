@@ -131,6 +131,9 @@ fun FocusOverlayContent(
             } else {
                 0.dp
             }
+            val actionOrder = remember(reminder.eventId, reminder.profile.layout.randomizeActionOrder) {
+                ReminderActionOrder.resolve(reminder.profile.layout.randomizeActionOrder)
+            }
 
             CompanionFigure(
                 modifier = Modifier
@@ -188,24 +191,41 @@ fun FocusOverlayContent(
                     modifier = Modifier.padding(12.dp),
                     verticalArrangement = Arrangement.spacedBy(10.dp)
                 ) {
-                    Button(
-                        modifier = Modifier.fillMaxWidth(),
-                        onClick = onReturnHome
-                    ) {
-                        Icon(Icons.Outlined.Home, contentDescription = null)
-                        Spacer(Modifier.size(8.dp))
-                        Text("Return home")
-                    }
-                    OutlinedButton(
-                        modifier = Modifier.fillMaxWidth(),
-                        onClick = onPauseFiveMinutes
-                    ) {
-                        Icon(Icons.Outlined.PauseCircle, contentDescription = null)
-                        Spacer(Modifier.size(8.dp))
-                        Text("Pause 5 min")
+                    actionOrder.forEach { action ->
+                        ReminderActionButton(
+                            action = action,
+                            onReturnHome = onReturnHome,
+                            onPauseFiveMinutes = onPauseFiveMinutes
+                        )
                     }
                 }
             }
+        }
+    }
+}
+
+@Composable
+private fun ReminderActionButton(
+    action: ReminderAction,
+    onReturnHome: () -> Unit,
+    onPauseFiveMinutes: () -> Unit
+) {
+    when (action) {
+        ReminderAction.ReturnHome -> Button(
+            modifier = Modifier.fillMaxWidth(),
+            onClick = onReturnHome
+        ) {
+            Icon(Icons.Outlined.Home, contentDescription = null)
+            Spacer(Modifier.size(8.dp))
+            Text("Return home")
+        }
+        ReminderAction.PauseFiveMinutes -> OutlinedButton(
+            modifier = Modifier.fillMaxWidth(),
+            onClick = onPauseFiveMinutes
+        ) {
+            Icon(Icons.Outlined.PauseCircle, contentDescription = null)
+            Spacer(Modifier.size(8.dp))
+            Text("Pause 5 min")
         }
     }
 }
